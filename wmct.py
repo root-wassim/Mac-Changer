@@ -3,15 +3,22 @@
 
 import subprocess
 import optparse
-import re
+import random
 import sys
+import re
+
 
 def get_argument():
     parser = optparse.OptionParser()
     parser.add_option("-i","--interface", dest="network_interface", help="The place to put the network interface")
+    parser.add_option("-r","--random", dest="random_mac", action="store_true",help="This option is to make a random MAC address")
     parser.add_option("-m","--mac", dest="new_mac",help="The place to put the new mac address")
 
     options, arguments = parser.parse_args()
+
+
+    if options.random_mac:
+        options.new_mac = random_mac()
 
 
     if not options.network_interface and not options.new_mac :
@@ -23,7 +30,15 @@ def get_argument():
     elif not options.network_interface :
         parser.error("[-] Specify an interface  , type -h for help")
 
-    return options    
+    return options 
+
+
+def random_mac():
+    hexa = []
+    for i in range(0,6):
+        hexa.append(random.randint(0x00,0xff))
+
+    return ":".join(f"{x:02x}" for x in hexa)    
 
 
 
